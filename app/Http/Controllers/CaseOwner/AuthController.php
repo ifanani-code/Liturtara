@@ -64,6 +64,25 @@ class AuthController extends \App\Http\Controllers\AuthController
         $user->role = 'case owner';
 
         if ($user->save()) {
+            // ✅ Buat data di tabel tokens
+            $user->tokens()->create([
+                'amount' => 0, // default sesuai struktur tabel
+            ]);
+
+            // ✅ Buat data di tabel user_points
+            $user->userPoint()->create([
+                'points' => 0,
+                'level' => 'Beginner', // default sesuai struktur tabel
+            ]);
+
+            // ✅ Buat data di tabel profile
+            $user->profile()->create([
+                'full_name' => '', // atau sesuaikan jika kamu minta input
+                'phone_number' => $user->phone_number,
+                'birth_date' => null,
+                'address' => null,
+            ]);
+
             event(new Registered($user));
             Auth::login($user);
             return redirect()->route('caseowner.dashboard');

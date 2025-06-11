@@ -17,6 +17,9 @@ use App\Http\Controllers\Reviewer\DashboardController as ReviewerDashboardContro
 Route::get('/', function(){
     return view('landing-page');
 });
+Route::get('/dashboardTR', function(){
+    return view('talent.dashboardtr');
+});
 
 
 // GROUP ROUTE CASEOWNER

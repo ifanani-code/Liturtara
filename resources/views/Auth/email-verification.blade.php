@@ -2,7 +2,7 @@
 @section('title', 'Email Verification')
 @section('content')
     <!-- Header -->
-    @include("layout.header_before")
+    @include("layout.caseowner.header_before")
     <section class="bg-gray-100 text-gray-800">
         <div class="min-h-screen flex items-center justify-center">
             <div class="relative w-full h-screen">

@@ -55,14 +55,17 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function certificates(){
         return $this->hasMany(Certificate::class);
     }
+
     public function notifications(){
         return $this->hasMany(Notifications::class);
     }
+
+
+        public function surveys(){
+            return $this->hasMany(Surveys::class);
+        }
     public function projects(){
         return $this->hasMany(Project::class);
-    }
-    public function surveys(){
-        return $this->hasMany(Surveys::class);
     }
 
     public function tokens()
@@ -79,6 +82,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     {
         return $this->hasMany(Cases::class);
     }
+
     public function profile()
     {
         return $this->hasOne(Profile::class);

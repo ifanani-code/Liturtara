@@ -136,7 +136,11 @@ class AuthController extends Controller
             if ($user) {
                 // Jika user sudah ada, cek apakah role-nya cocok
                 if ($user->role !== $role) {
-                    return redirect()->route(route: $role . '.login')->with('error', "This email already registered as $user->role");
+                    return redirect()->to(match ($user->role) {
+                        'case owner' => route('caseowner.login'),
+                        'talent' => route('talent.login'),
+                        'reviewer' => route('reviewer.login'),
+                    })->with('error', "This email already registered as $user->role");
                 }
             } else {
                 // Buat akun baru
@@ -148,8 +152,25 @@ class AuthController extends Controller
                     'email_verified_at' => now(),
                     'is_verified' => false
                 ]);
-            }
+                    // ✅ Buat data di tabel tokens
+                    $user->tokens()->create([
+                        'amount' => 0, // default sesuai struktur tabel
+                    ]);
 
+                    // ✅ Buat data di tabel user_points
+                    $user->userPoint()->create([
+                        'points' => 0,
+                        'level' => 'Beginner', // default sesuai struktur tabel
+                    ]);
+
+                    // ✅ Buat data di tabel profile
+                    $user->profile()->create([
+                        'full_name' => '', // atau sesuaikan jika kamu minta input
+                        'phone_number' => $user->phone_number,
+                        'birth_date' => null,
+                        'address' => null,
+                    ]);
+                }
             Auth::login($user);
 
             // Redirect sesuai role
@@ -157,11 +178,9 @@ class AuthController extends Controller
                 'case owner' => route('caseowner.dashboard'),
                 'talent' => route('talent.dashboard'),
                 'reviewer' => route('reviewer.dashboard'),
-                default => '/',
             });
 
-        }
-        catch (\Exception $role) {
+        } catch (\Exception $role) {
             $role = session('role');
             return redirect()->to(match ($role) {
                 'case owner' => route('caseowner.login'),

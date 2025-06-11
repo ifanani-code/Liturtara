@@ -32,7 +32,7 @@
                     <h2 class="text-2xl font-bold text-navy mb-6">New Password</h2>
 
                     <form action="{{ route('password.update') }}" method="POST">
-                        <input type="hidden" name="token" value="{{ $token }}">
+                        {{-- <input type="hidden" name="token" value="{{ $token }}"> --}}
                         @csrf
                         <div class="mb-4">
                             <label for="email" class="block text-gray-700 mb-2">Email</label>
@@ -50,8 +50,7 @@
                             <div class="relative">
                                 <input type="password" id="password" name="password" placeholder="Password"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-navy">
-                                <button type="button" id="toggle-password"
-                                    class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <button type="button" id="toggle-password" class="absolute right-3 top-1/2 transform -translate-y-1/2">
                                     <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -72,11 +71,9 @@
                         <div class="mb-6 relative">
                             <label for="password_confirmation" class="block text-gray-700 mb-2">Confirm Password</label>
                             <div class="relative">
-                                <input type="password" id="password_confirmation" name="password_confirmation"
-                                    placeholder="Confirm Password"
+                                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password"
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-navy">
-                                <button type="button" id="toggle-password"
-                                    class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <button type="button" id="toggle-password" class="absolute right-3 top-1/2 transform -translate-y-1/2">
                                     <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -95,8 +92,7 @@
                         </div>
 
 
-                        <button type="submit" class="w-full bg-navy text-white py-2 rounded-md font-medium">Reset
-                            Password</button>
+                        <button type="submit" class="w-full bg-navy text-white py-2 rounded-md font-medium">Reset Password</button>
                     </form>
                 </div>
             </div>

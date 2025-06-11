@@ -1,44 +1,56 @@
 @extends("layout.default")
-@section("title", "Forgot Password")
+@section("title", "Case Owner Sign In")
 @section("content")
-    <section class="bg-gray-50 dark:bg-gray-900">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            {{-- session message --}}
-            @if (session()->get("status"))
-                <p>{{ session()->get("status") }}</p>
-            @endif
-            <div
-                class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        Forgot password
-                    </h1>
-                    <form class="space-y-4 md:space-y-6" method="POST" action="{{ route("password.request") }}">
+    @include("layout.caseowner.header_before")
+    <!-- Main Content -->
+    <main class="container mx-auto py-8 px-4 md:px-0">
+        <div class="flex flex-col md:flex-row items-center">
+            <!-- Left Side with Image and Curved Design -->
+            <div class="flex justify-center lg:block">
+                <img src="{{ asset('image/logo.svg') }}" alt="Liturtara Logo" class="max-w-full h-auto" />
+            </div>
+
+            <!-- Right Side with Login Form -->
+            <div class="w-full md:w-1/2 mt-8 md:mt-0">
+                <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+                    {{-- session message --}}
+                    @if (session()->get("status"))
+                        <p>{{ session()->get("status") }}</p>
+                    @endif
+                    <!-- Perubahan di sini: mengubah justify-center menjadi justify-start -->
+                    <div class="mb-6 flex justify-start">
+                        <img src="{{ asset('image/LogoLiturtara1.png') }}" alt="LITURTARA Logo" class="h-10">
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-navy mb-6">Forgot Password</h2>
+
+                    <form action="{{ route('password.request') }}" method="POST">
                         @csrf
-                        <div>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
-                                email</label>
-                            <input type="email" name="email" id="email"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="name@company.com" required="">
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Email"
+                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-navy">
                             @if ($errors->has('email'))
                                 <span class="text-danger">
                                     {{ $errors->first('email') }}
                                 </span>
                             @endif
                         </div>
-                        <button type="submit"
-                            class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Reset Password</button>
-                        {{-- <button type="submit"
-                            class="w-full bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-100 dark:hover:bg-gray-200 dark:focus:ring-blue-800">Sign
-                            in with google</button> --}}
-                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                            Don’t have an account yet? <a href="{{ route('caseowner.register') }}"
-                                class="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign up</a>
-                        </p>
+
+
+                        <button type="submit" class="w-full bg-navy text-white py-2 rounded-md font-medium">Reset
+                            Password</button>
                     </form>
+
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-700">
+                            Return to
+                            <a href="/" class="text-navy font-medium hover:underline">Log in</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
+    @include("layout.footer")
 @endsection
