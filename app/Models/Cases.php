@@ -17,6 +17,8 @@ class Cases extends Model
         'level',
         'reward_token',
         'status',
+        'category',
+        'selected_talent_id',
     ];
 
     // Relasi ke User
@@ -25,7 +27,17 @@ class Cases extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function review()
+    public function proposals()
+    {
+        return $this->hasMany(CaseTalentProposal::class);
+    }
+
+    public function selectedTalent()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+public function review()
     {
         return $this->hasOne(Review::class, 'case_id');
     }

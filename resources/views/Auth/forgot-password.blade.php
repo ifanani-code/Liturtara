@@ -1,7 +1,7 @@
 @extends("layout.default")
 @section("title", "Case Owner Sign In")
 @section("content")
-    @include("layout.caseowner.header_before")
+    {{-- @include("layout.caseowner.header_before") --}}
     <!-- Main Content -->
     <main class="container mx-auto py-8 px-4 md:px-0">
         <div class="flex flex-col md:flex-row items-center">
@@ -14,9 +14,7 @@
             <div class="w-full md:w-1/2 mt-8 md:mt-0">
                 <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
                     {{-- session message --}}
-                    @if (session()->get("status"))
-                        <p>{{ session()->get("status") }}</p>
-                    @endif
+                   @include('layout.alert-auth')
                     <!-- Perubahan di sini: mengubah justify-center menjadi justify-start -->
                     <div class="mb-6 flex justify-start">
                         <img src="{{ asset('image/LogoLiturtara1.png') }}" alt="LITURTARA Logo" class="h-10">
@@ -31,7 +29,7 @@
                             <input type="email" id="email" name="email" placeholder="Email"
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-navy">
                             @if ($errors->has('email'))
-                                <span class="text-danger">
+                                <span class="text-red-500">
                                     {{ $errors->first('email') }}
                                 </span>
                             @endif

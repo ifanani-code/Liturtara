@@ -5,7 +5,7 @@
     window.onload = function () {
         snap.pay('{{ $snapToken }}', {
             onSuccess: function (result) {
-                window.location.href = "{{ route('caseowner.token.topup.success') }}";
+                window.location.href = "{{ route('token.topup.success') }}";
             },
             onPending: function (result) {
                 alert('Silakan selesaikan pembayaran.');

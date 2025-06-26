@@ -6,16 +6,6 @@
 
     <main class="py-10 lg:py-0">
         <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            @if (session()->has("success"))
-                <div class="text-xl ">
-                    {{ session()->get("success") }}
-                </div>
-            @endif
-            @if (session()->has("error"))
-                <div class="text-xl">
-                    {{ session()->get("error") }}
-                </div>
-            @endif
             <!-- Left Side (Image) -->
             <div class="flex justify-center lg:block">
                 <img src="{{ asset('image/logo.svg') }}" alt="Liturtara Logo" class="max-w-full h-auto" />
@@ -23,6 +13,8 @@
 
             <!-- Right Side (Form) -->
             <div class="max-w-md w-full space-y-6 mx-auto">
+                {{-- alert --}}
+                @include('layout.alert-auth')
                 <img src="{{ asset('image/LogoLiturtara1.png') }}" alt="Liturtara" class="h-10 mb-2 mx-auto" />
                 <h2 class="text-2xl font-bold text-center">Sign Up Case Owner</h2>
                 <form id="registerForm" class="space-y-4" action="{{ route('caseowner.register.post') }}" method="POST">

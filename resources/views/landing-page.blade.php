@@ -7,6 +7,7 @@
             <img src="{{ asset('image/LogoLiturtara1.png') }}" alt="Logo" class="h-8" />
         </div>
     </nav>
+    @include('layout.alert')
 
     <!-- Main Content -->
     <main class="flex-grow container mx-auto px-4 py-12 flex flex-col md:flex-row items-center">

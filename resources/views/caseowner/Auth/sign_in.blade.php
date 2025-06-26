@@ -13,22 +13,8 @@
             <!-- Right Side with Login Form -->
             <div class="w-full md:w-1/2 mt-8 md:mt-0">
                 <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
-                    {{-- session message --}}
-                    @if (session()->get("status"))
-                        <p>{{ session()->get("status") }}</p>
-                    @endif
-
-                    @if (session()->has("success"))
-                        <div>
-                            {{ session()->get("success") }}
-                        </div>
-                    @endif
-                    @if (session()->has("error"))
-                        <div>
-                            {{ session()->get("error") }}
-                        </div>
-                    @endif
-                    <!-- Perubahan di sini: mengubah justify-center menjadi justify-start -->
+                    {{-- alert --}}
+                    @include('layout.alert-auth')
                     <div class="mb-6 flex justify-start">
                         <img src="{{ asset('image/LogoLiturtara1.png') }}" alt="LITURTARA Logo" class="h-10">
                     </div>
@@ -42,7 +28,7 @@
                             <input type="email" id="email" name="email" placeholder="Email"
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-navy">
                             @if ($errors->has('email'))
-                                <span class="text-danger">
+                                <span class="text-red-500">
                                     {{ $errors->first('email') }}
                                 </span>
                             @endif
@@ -66,7 +52,7 @@
                                 </button>
                             </div>
                             @if ($errors->has('password'))
-                                <span class="text-danger">
+                                <span class="text-red-500">
                                     {{ $errors->first('password') }}
                                 </span>
                             @endif

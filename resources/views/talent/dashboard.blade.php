@@ -1,7 +1,8 @@
 @extends('layout.default')
 @section('title', 'Dashboard Talent Researcher')
 @section('content')
-    @include('layout.talent.header_after')
+@include('layout.talent.header_after')
+@include('layout.alert')
 
     <!-- Hero Section with Students Image -->
     <section class="w-full bg-gray-50 mt-10">
@@ -30,9 +31,13 @@
                             <span class="absolute left-0 -bottom-0.5 w-full h-1 bg-navy rounded"></span>
                         </a>
                         <!-- Tab Explore Case -->
-                        <a href="#"
+                        <a href="{{ route('talent.availableCases') }}"
                             class="pb-2 text-sm font-semibold text-gray-600 hover:text-navy flex items-center">
                             Explore Case
+                        </a>
+                        <a href="{{ route('talent.myProjects') }}"
+                            class="pb-2 text-sm font-semibold text-gray-600 hover:text-navy flex items-center">
+                            My Projects
                         </a>
                     </nav>
                 </div>
@@ -71,13 +76,13 @@
                 <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($cases as $case)
                         @php
-    $statusColor = match ($case->status) {
-        'Available' => 'bg-navy',
-        'In-progress' => 'bg-yellow-500',
-        'Cancelled' => 'bg-red-500',
-        'Completed' => 'bg-green-500',
-        default => 'bg-gray-500',
-    };
+                            $statusColor = match ($case->status) {
+                                'Available' => 'bg-navy',
+                                'In-progress' => 'bg-yellow-500',
+                                'Cancelled' => 'bg-red-500',
+                                'Completed' => 'bg-green-500',
+                                default => 'bg-gray-500',
+                            };
                         @endphp
                         <!-- Card 1: Available -->
                         <div class="bg-white rounded-lg shadow-md overflow-hidden relative">
@@ -132,9 +137,8 @@
                                             class="reportButton border border-red-500 text-red-500 hover:text-red-700 px-4 py-2 rounded-md flex items-center text-sm">
                                             Report
                                         </button>
-                                        <button
-                                        class="bg-navy text-white px-4 py-2 rounded-md flex items-center text-sm"
-                                        onclick="handleCaseClick({{ $user->is_verified }}, '{{ $case->title }}')">
+                                        <button class="bg-navy text-white px-4 py-2 rounded-md flex items-center text-sm"
+                                            onclick="handleCaseClick({{ $user->is_verified }}, '{{ $case->title }}')">
                                             View
                                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -150,6 +154,7 @@
                 </div>
             </section>
 
+            {{-- pagination --}}
             <section class="py-6">
                 <div class="max-w-6xl mx-auto px-4 flex items-center justify-between relative">
                     <!-- Kiri: Spacer -->
@@ -207,63 +212,56 @@
             <p class="text-gray-700 mb-4">You need to at least have a 5 token</p>
             <div class="flex justify-end gap-3">
                 <button id="closeDeniedModal"
-                    class="px-6 py-2 border-2 border-navy text-navy rounded-md font-semibold bg-white hover:bg-blue-50 transition">Cancel</button>
-                <button id="submitDeniedModal"
-                    class="px-6 py-2 bg-navy text-white rounded-md font-semibold hover:bg-blue-900 transition">Submit</button>
+                    class="px-6 py-2 border-2 border-navy text-navy rounded-md font-semibold bg-white hover:bg-blue-50 transition">Close</button>
+                <a href="{{ route('token.topup.form') }}"
+                    class="px-6 py-2 bg-navy text-white rounded-md font-semibold hover:bg-blue-900 transition">Topup</a>
             </div>
         </div>
     </div>
 
     <script>
         const reportButtons = document.querySelectorAll('.reportButton');
-            const reportModal = document.getElementById('reportModal');
-            const deniedModal = document.getElementById('deniedModal');
+        const reportModal = document.getElementById('reportModal');
+        const deniedModal = document.getElementById('deniedModal');
 
-            const closeReportModal = document.getElementById('closeReportModal');
-            const submitReportModal = document.getElementById('submitReportModal');
+        const closeReportModal = document.getElementById('closeReportModal');
+        const submitReportModal = document.getElementById('submitReportModal');
 
-            const closeDeniedModal = document.getElementById('closeDeniedModal');
-            const submitDeniedModal = document.getElementById('submitDeniedModal');
+        const closeDeniedModal = document.getElementById('closeDeniedModal');
+        const submitDeniedModal = document.getElementById('submitDeniedModal');
 
-            // Show report modal
-            reportButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    reportModal.classList.remove('hidden');
-                });
+        // Show report modal
+        reportButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                reportModal.classList.remove('hidden');
             });
+        });
 
-            // Close report modal
-            closeReportModal.addEventListener('click', () => {
-                reportModal.classList.add('hidden');
-            });
+        // Close report modal
+        closeReportModal.addEventListener('click', () => {
+            reportModal.classList.add('hidden');
+        });
 
-            // Submit report
-            submitReportModal.addEventListener('click', () => {
-                const reportText = document.getElementById('reportText').value;
-                alert(`Report submitted: ${reportText}`);
-                reportModal.classList.add('hidden');
-            });
+        // Submit report
+        submitReportModal.addEventListener('click', () => {
+            const reportText = document.getElementById('reportText').value;
+            alert(`Report submitted: ${reportText}`);
+            reportModal.classList.add('hidden');
+        });
 
-            // View case access check
-            function handleCaseClick(isVerified, caseTitle) {
-                if (isVerified == 0) {
-                    deniedModal.classList.remove("hidden");
-                } else {
-                    window.location.href = `/cases/${encodeURIComponent(caseTitle)}`;
-                }
+        // View case access check
+        function handleCaseClick(isVerified, caseTitle) {
+            if (isVerified == 0) {
+                deniedModal.classList.remove("hidden");
+            } else {
+                window.location.href = `/cases/${encodeURIComponent(caseTitle)}`;
             }
+        }
 
-            // Close denied modal
-            closeDeniedModal.addEventListener('click', () => {
-                deniedModal.classList.add('hidden');
-            });
-
-            // Submit denied action
-            submitDeniedModal.addEventListener('click', () => {
-                deniedModal.classList.add('hidden');
-                alert('Access request logged or other action.');
-            });
-
+        // Close denied modal
+        closeDeniedModal.addEventListener('click', () => {
+            deniedModal.classList.add('hidden');
+        });
     </script>
 
     @include('layout.contact')

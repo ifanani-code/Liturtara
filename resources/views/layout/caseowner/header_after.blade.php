@@ -17,9 +17,18 @@
     <!-- Account Button (Right Side) -->
     <div class="flex justify-center items-center space-x-4">
         <!-- Token Button -->
-        <a href="#">
+        <a href="{{ route("token.topup.form") }}">
             <button class="text-sm text-gray-700 hover:text-navy font-medium">
                 {{ $token->amount}} Token
+            </button>
+        </a>
+
+
+
+        <!-- Point Button -->
+        <a href="#">
+            <button class="text-sm text-gray-700 hover:text-navy font-medium">
+                {{ $userPoint->points}} Point
             </button>
         </a>
 
@@ -83,13 +92,6 @@
                     all notification</a>
             </div>
         </div>
-
-        <!-- Point Button -->
-        <a href="#">
-            <button class="text-sm text-gray-700 hover:text-navy font-medium">
-                {{ $userPoint->points}} Point
-            </button>
-        </a>
 
         <!-- Account Button -->
         <a href="#">

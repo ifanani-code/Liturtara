@@ -22,6 +22,15 @@
             </button>
         </a>
 
+
+
+        <!-- Point Button -->
+        <a href="#">
+            <button class="text-sm text-gray-700 hover:text-navy font-medium">
+                {{ $userPoint->points ?? 0 }} Point
+            </button>
+        </a>
+
         <!-- Notification -->
         <div class="flex">
             <button id="notificationButton" class="relative">
@@ -82,13 +91,6 @@
                     all notification</a>
             </div>
         </div>
-
-        <!-- Point Button -->
-        <a href="#">
-            <button class="text-sm text-gray-700 hover:text-navy font-medium">
-                {{ $userPoint->points ?? 0 }} Point
-            </button>
-        </a>
 
         <!-- Account Button -->
         <a href="#">

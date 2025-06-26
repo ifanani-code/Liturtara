@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route("caseowner.token.topup.checkout") }}">
+<form method="POST" action="{{ route("token.topup.checkout") }}">
     @csrf
     <h2 class="text-xl font-bold mb-4">Pilih Jumlah Token</h2>
 
