@@ -1,15 +1,15 @@
-<footer class="bg-navy text-white py-12">
+<footer class="bg-navy text-white py-28">
     <div class="container mx-auto px-6 space-y-8">
         <div class="flex flex-col md:flex-row justify-between gap-8">
             <div class="space-y-4 ">
-                <img src="{{ asset('image/LogoLiturtara2.png') }}" alt="Liturtara Logo" class="h-8">
+                <img src="{{ asset('image/LogoLiturtara2.png') }}" alt="Liturtara Logo" class="h-10">
                 <address class="not-italic text-sm">
                     Jl. Geger Kalong Hilir, Sukasari, Kec. Sukasari, Kota Bandung, Jawa Barat 40152
                 </address>
                 <div class="flex space-x-4 mt-2">
-                    <a href="#"><img src="{{ asset('image/facebook.svg') }}" alt="Facebook" class="h-8"></a>
-                    <a href="#"><img src="{{ asset('image/instagram.svg') }}" alt="Instagram" class="h-8"></a>
-                    <a href="#"><img src="{{ asset('image/linkin.svg') }}" alt="LinkedIn" class="h-8"></a>
+                    <a href="#"><img src="{{ asset('image/facebook.svg') }}" alt="Facebook" class="h-10"></a>
+                    <a href="#"><img src="{{ asset('image/instagram.svg') }}" alt="Instagram" class="h-10"></a>
+                    <a href="#"><img src="{{ asset('image/linkin.svg') }}" alt="LinkedIn" class="h-10"></a>
                 </div>
             </div>
 

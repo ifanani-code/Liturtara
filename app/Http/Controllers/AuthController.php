@@ -7,9 +7,11 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Exception;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
@@ -119,77 +121,78 @@ class AuthController extends Controller
     }
 
     // GOOGLE AUTH
-    public function RedirectToGoogle(Request $request)
+    public function RedirectToGoogle($role)
     {
-        session(['role' => $request->role]);
+        session()->put('role', $role);
         return Socialite::driver('google')->redirect();
     }
     public function HandleGoogleCallback()
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            $role = session('role'); // Ambil role dari session
+            $role = session('role');
 
-            // Cek apakah user sudah ada berdasarkan email
+            if (!$role) {
+                return redirect('/')->with('error', 'Role session is missing.');
+            }
+
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if ($user) {
-                // Jika user sudah ada, cek apakah role-nya cocok
                 if ($user->role !== $role) {
                     return redirect()->to(match ($user->role) {
                         'case owner' => route('caseowner.login'),
                         'talent' => route('talent.login'),
                         'reviewer' => route('reviewer.login'),
-                    })->with('error', "This email already registered as $user->role");
+                    })->with('error', "This email is already registered as a {$user->role}.");
                 }
+
+                Auth::login($user);
             } else {
-                // Buat akun baru
                 $user = User::create([
                     'email' => $googleUser->getEmail(),
                     'phone_number' => $googleUser->user['phoneNumber'] ?? null,
                     'password' => bcrypt(Str::random(16)),
                     'role' => $role,
                     'email_verified_at' => now(),
-                    'is_verified' => false
+                    'is_verified' => false,
                 ]);
-                    // ✅ Buat data di tabel tokens
-                    $user->tokens()->create([
-                        'amount' => 0, // default sesuai struktur tabel
-                    ]);
 
-                    // ✅ Buat data di tabel user_points
-                    $user->userPoint()->create([
-                        'points' => 0,
-                        'level' => 'Beginner', // default sesuai struktur tabel
-                    ]);
+                $user->tokens()->create(['amount' => 0]);
+                $user->userPoint()->create(['points' => 0, 'level' => 'Beginner']);
+                $user->profile()->create([
+                    'full_name' => '',
+                    'phone_number' => $user->phone_number,
+                    'birth_date' => null,
+                    'address' => null,
+                ]);
 
-                    // ✅ Buat data di tabel profile
-                    $user->profile()->create([
-                        'full_name' => '', // atau sesuaikan jika kamu minta input
-                        'phone_number' => $user->phone_number,
-                        'birth_date' => null,
-                        'address' => null,
-                    ]);
-                }
-            Auth::login($user);
+                Auth::login($user);
+            }
 
-            // Redirect sesuai role
             return redirect()->to(match ($user->role) {
                 'case owner' => route('caseowner.dashboard'),
                 'talent' => route('talent.dashboard'),
                 'reviewer' => route('reviewer.dashboard'),
             });
 
-        } catch (\Exception $role) {
-            $role = session('role');
+        } catch (Exception $e) {
+            Log::error('Google Login Error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            $role = session('role') ?? 'unknown';
+
             return redirect()->to(match ($role) {
                 'case owner' => route('caseowner.login'),
                 'talent' => route('talent.login'),
                 'reviewer' => route('reviewer.login'),
                 default => '/',
-            })->with('error', "Failed to login as a $role");
+            })->with('error', "Failed to login as a {$role}");
         }
     }
+
 
 
 }

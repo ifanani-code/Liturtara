@@ -1,20 +1,29 @@
-<form method="POST" action="{{ route("token.topup.checkout") }}">
-    @csrf
-    <h2 class="text-xl font-bold mb-4">Pilih Jumlah Token</h2>
+@extends('layout.default')
+@section('title', 'Topup Token')
+@section('content')
+    @include('layout.navbar_after')
+    <section class="">
+        <form method="POST" action="{{ route('token.topup.checkout') }}"
+            class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+            @csrf
+            <h2 class="text-2xl font-semibold mb-6 text-center text-navy">Top Up Token</h2>
+            <div class="grid grid-cols-2 gap-4">
+                @foreach ([5, 10, 20, 50] as $amount)
+                    <label
+                        class="border rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer transition duration-200 hover:shadow-lg hover:border-navy">
+                        <input type="radio" name="token_amount" value="{{ $amount }}" class="sr-only peer" required>
+                        <div class="peer-checked:text-navy peer-checked:font-bold text-lg">{{ $amount }} Token</div>
+                        <div class="text-sm text-gray-500 peer-checked:text-navy">Rp
+                            {{ number_format($amount * 2500, 0, '.', ',') }}</div>
+                    </label>
+                @endforeach
+            </div>
 
-    <div class="grid grid-cols-2 gap-4">
-        @foreach([5, 10, 20, 50] as $amount)
-            <label class="block border rounded p-4 cursor-pointer">
-                <input type="radio" name="token_amount" value="{{ $amount }}" required>
-                <div>{{ $amount }} Token</div>
-                <div class="text-sm text-gray-500">Rp {{ number_format($amount * 2500, 0, ',', '.') }}</div>
-            </label>
-        @endforeach
-    </div>
-
-    <h3 class="text-lg mt-6 mb-2">Informasi Billing</h3>
-    <input type="text" name="name" placeholder="Nama" class="border p-2 w-full mb-2" required>
-    <input type="text" name="phone" placeholder="Nomor HP" class="border p-2 w-full mb-4" required>
-
-    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Purchase</button>
-</form>
+            <button type="submit"
+                class="mt-6 w-full bg-navy hover:bg-navy-dark text-white py-2 px-4 rounded-lg text-lg transition duration-200">
+                Purchase
+            </button>
+        </form>
+    </section>
+    @include("layout.footer")
+@endsection

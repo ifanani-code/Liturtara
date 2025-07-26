@@ -1,8 +1,9 @@
 <nav class="bg-white shadow-md py-4 px-6 flex justify-between items-center relative">
     <!-- Logo -->
     <div class="flex items-center space-x-4">
-        <img src="{{ asset('image/LogoLiturtara1.png') }}" alt="Liturtara Logo" class="h-8">
-        {{-- <img src="{{ asset('storage/liturtaralogo.svg') }}" alt="Liturtara Logo" class="h-8"> --}}
+        <a href="/">
+            <img src="{{ asset('image/LogoLiturtara1.png') }}" alt="Liturtara Logo" class="h-8">
+        </a>
     </div>
 
     <!-- Menu Navigasi (Left Side) -->

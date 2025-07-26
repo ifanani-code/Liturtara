@@ -1,7 +1,7 @@
 @extends("layout.default")
 @section("title", "Case Owner Sign In")
 @section("content")
-    @include("layout.caseowner.header_before")
+    {{-- @include("layout.caseowner.header_before") --}}
     <!-- Main Content -->
     <main class="container mx-auto py-8 px-4 md:px-0">
         <div class="flex flex-col md:flex-row items-center">

@@ -16,6 +16,16 @@ class CasesController extends Controller
     return view('talent.available-cases', compact('cases'));
     }
 
+    public function index(Request $request) {
+        $query = $query = $request->input('search');
+
+        $cases = Cases::when($query, function ($q) use ($query) {
+            $q->where('title', 'like', '%' . $query . '%');
+        })->latest()->paginate(10); // paginate atau bisa ->get()
+
+        return view('talent.dashboard', compact('cases', 'query'));
+    }
+
     public function submitProposal(Request $request, $caseId)
     {
         $request->validate([

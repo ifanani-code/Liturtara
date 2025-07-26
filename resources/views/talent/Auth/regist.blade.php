@@ -6,16 +6,7 @@
 
     <main class="py-10 lg:py-0">
         <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            @if (session()->has("success"))
-                <div class="text-xl ">
-                    {{ session()->get("success") }}
-                </div>
-            @endif
-            @if (session()->has("error"))
-                <div class="text-xl">
-                    {{ session()->get("error") }}
-                </div>
-            @endif
+            @include('layout.alert-auth')
             <!-- Left Side (Image) -->
             <div class="flex justify-center lg:block">
                 <img src="{{ asset('image/logo.svg') }}" alt="Liturtara Logo" class="max-w-full h-auto" />

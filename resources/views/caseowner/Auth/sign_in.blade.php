@@ -1,7 +1,7 @@
-@extends("layout.default")
-@section("title", "Case Owner Sign In")
-@section("content")
-    @include("layout.caseowner.header_before")
+@extends('layout.default')
+@section('title', 'Case Owner Sign In')
+@section('content')
+    @include('layout.caseowner.header_before')
     <!-- Main Content -->
     <main class="container mx-auto py-8 px-4 md:px-0">
         <div class="flex flex-col md:flex-row items-center">
@@ -41,8 +41,8 @@
                                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-navy">
                                 <button type="button" id="toggle-password"
                                     class="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -66,7 +66,7 @@
                         <p class="text-gray-500">or</p>
                     </div>
 
-                    <a href="{{ route("google.login", ["role" => "case owner"]) }}"
+                    <a href="{{ route('google.login', 'case owner') }}"
                         class="w-full mt-4 py-2 px-4 border border-gray-300 rounded-md flex items-center justify-center space-x-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-5 h-5">
                             <path fill="#FFC107"
@@ -92,12 +92,13 @@
                     <div class="mt-6 text-center">
                         <p class="text-gray-700">
                             New to Liturtara?
-                            <a href="{{ route('caseowner.register') }}" class="text-navy font-medium hover:underline">Sign up</a>
+                            <a href="{{ route('caseowner.register') }}" class="text-navy font-medium hover:underline">Sign
+                                up</a>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-    @include("layout.footer")
+    @include('layout.footer')
 @endsection

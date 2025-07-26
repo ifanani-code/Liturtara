@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profile;
 use App\Models\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,42 +39,86 @@ class TopupController extends Controller
 
     public function checkout(Request $request)
     {
+        $user = Auth::user();
+        $role = $user->role;
+        $profile = Profile::where('user_id', $user->id)->first();
         $request->validate([
             'token_amount' => 'required|integer|in:5,10,20,50',
-            'name' => 'required|string',
-            'phone' => 'required|string',
         ]);
 
         $price = $request->token_amount * 2500;
+        $tax = $price * 0.11;
+        $finalPrice = $price + $tax;
 
         $transaction = TokenTransactions::create([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'token_amount' => $request->token_amount,
-            'total_price' => $price,
+            'total_price' => $finalPrice,
             'status' => 'pending'
         ]);
 
-        $midtransPayload = [
+        // Set your Merchant Server Key
+        Config::$serverKey = config('midtrans.server_key');
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        Config::$isProduction = false;
+        // Set sanitization on (default)
+        Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        Config::$is3ds = true;
+
+        $params = [
             'transaction_details' => [
-                'order_id' => 'TXN-' . $transaction->id . '-' . time(),
-                'gross_amount' => $price,
+                'order_id' => $transaction->id,
+                'gross_amount' => $transaction->total_price,
             ],
             'customer_details' => [
-                'first_name' => $request->name,
-                'phone' => $request->phone,
+                'name' => $profile->full_name ?? 'pembeli 1',
+                'email' => $user->email,
+                'phone' => $profile->phone_number ?? '08123456789',
             ],
-            'callbacks' => [
-                'finish' => route('token.topup.success'),
-            ]
         ];
 
-        $snapToken = Snap::getSnapToken($midtransPayload);
-
-        return view('token.payment', compact('snapToken'));
+        $snapToken = Snap::getSnapToken($params);
+        // @dd($snapToken);
+        return view('token.payment', compact('snapToken', 'transaction', 'role', 'profile', 'price'));
     }
 
     public function success()
     {
         return view('token.success');
     }
+
+    public function callback(Request $request)
+    {
+        $serverKey = config('midtrans.server_key');
+        $hashed = hash("SHA512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+
+        if ($hashed == $request->signature_key) {
+            if ($request->transaction_status === 'capture' || $request->transaction_status === 'settlement') {
+                $transaction = TokenTransactions::find($request->order_id);
+
+                if ($transaction && $transaction->status !== 'paid') {
+                    // Update status & payment_type
+                    $transaction->update([
+                        'status' => 'paid',
+                        'payment_type' => $request->payment_type // <--- tambahkan ini
+                    ]);
+
+                    // Ambil atau buat token user
+                    $token = Token::firstOrCreate(
+                        ['user_id' => $transaction->user_id],
+                        ['amount' => 0]
+                    );
+
+                    $token->increment('amount', $transaction->token_amount);
+                    $token->touch();
+                }
+            }
+        }
+
+        return response()->json(['message' => 'Callback processed']);
+    }
+
+
+
 }

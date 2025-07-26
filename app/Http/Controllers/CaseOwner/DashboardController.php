@@ -13,19 +13,40 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        return view('caseowner.dashboardco');
-    }
-
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $user = Auth::user();
-        $token = Token::where('user_id', $user->id)->first();
-        $userPoint = UserPoint::where('user_id', $user->id)->first();
-        $cases = Cases::where('user_id', $user->id)->latest()->get();
-        $profile = Profile::where('user_id', $user->id)->first();
-        return view('caseowner.dashboardco', compact('token', 'userPoint', 'cases', 'profile'));
-    }
 
+        // Ambil query input
+        $search = $request->input('search');
+        $status = $request->input('status');
+        $allowedStatus = ['Sent', 'Available', 'In-progress', 'Completed', 'Expired'];
+
+        // Ambil case milik user saja
+        $query = Cases::with('user.profile')->where('user_id', $user->id);
+
+        // Filter berdasarkan status (jika valid)
+        if ($status && in_array($status, $allowedStatus)) {
+            $query->where('status', $status);
+        }
+
+        // Filter berdasarkan pencarian judul
+        if ($search) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        // Ambil data terurut terbaru
+        $cases = $query->latest()->paginate(4)->withQueryString();
+
+        // Gunakan relasi jika ada
+        $token = $user->tokens;
+        $userPoint = $user->userPoint;
+        $profile = $user->profile;
+
+        session()->put("token", $token->amount);
+        session()->put("point", $userPoint->points);
+        session()->put("role", $user->role);
+
+        return view('caseowner.dashboard', compact('cases', 'profile', 'search', 'status'));
+    }
 }

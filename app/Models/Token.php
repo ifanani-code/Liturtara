@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Token extends Model
 {
+    public $timestamps = true;
     protected $fillable = ['user_id', 'amount'];
 
     // Relasi ke User

@@ -13,22 +13,53 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function dashboard(Request $request)
     {
         $user = Auth::user();
+        $tab = $request->get('tab', 'case-list');
+        $status = $request->input('status');
+        $search = $request->input('search');
+        $allowedStatus = ['Available', 'In-progress', 'Completed'];
 
-        // Ambil semua kasus dari case owner
-        $cases = Cases::with('user.profile')->get();
-        $userPoint = UserPoint::where('user_id', $user->id)->first();
-        $token = Token::where('user_id', $user->id)->first();
+        $tabViewMap = [
+            'case-list' => 'talent.partials.case-list',
+            'explore-case' => 'talent.partials.explore-case',
+            'solution-status' => 'talent.partials.solution-status',
+        ];
+        $tab_view = $tabViewMap[$tab] ?? 'talent.partials.case-list';
 
+        $query = Cases::query()->latest();
 
-        return view('talent.dashboard', [
-            'user' => $user,
-            'cases' => $cases,
-            'userPoint' => $userPoint,
-            'token' => $token,
-            'showTopUpPopup' => $user->is_verified == 0, // trigger popup
-        ]);
+        // Filter query berdasarkan tab
+        if ($tab === 'case-list') {
+            $query->whereIn('status', $allowedStatus);
+        } elseif ($tab === 'explore-case') {
+            $query->whereNull('selected_talent_id')->where('status', 'Available');
+        } elseif ($tab === 'solution-status') {
+            $query->where('selected_talent_id', $user->id);
+        }
+
+        // Filter status jika valid
+        if ($status && in_array($status, $allowedStatus)) {
+            $query->where('status', $status);
+        }
+
+        // Filter pencarian
+        if ($search) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        $cases = $query->paginate(4)->withQueryString();
+
+        // Session point & token
+        $userPoint = $user->userPoint;
+        $token = $user->tokens;
+
+        session()->put('point', $userPoint->points);
+        session()->put('token', $token->amount);
+        session()->put('role', $user->role);
+
+        return view('talent.dashboard', compact('cases', 'user', 'tab_view', 'status', 'search'));
     }
+
 }

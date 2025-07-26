@@ -27,6 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'google_id',
         'phone_number',
         'email_verified_at',
+        'is_verified',
     ];
 
     /**
@@ -52,19 +53,23 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         ];
     }
 
-    public function certificates(){
+    public function certificates()
+    {
         return $this->hasMany(Certificate::class);
     }
 
-    public function notifications(){
+    public function notifications()
+    {
         return $this->hasMany(Notifications::class);
     }
 
 
-        public function surveys(){
-            return $this->hasMany(Surveys::class);
-        }
-    public function projects(){
+    public function surveys()
+    {
+        return $this->hasMany(Surveys::class);
+    }
+    public function projects()
+    {
         return $this->hasMany(Project::class);
     }
 

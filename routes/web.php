@@ -22,9 +22,6 @@ use App\Http\Controllers\Reviewer\DashboardController as ReviewerDashboardContro
 Route::get('/', function(){
     return view('landing-page');
 });
-Route::get('/dashboardTR', function(){
-    return view('talent.dashboardtr');
-});
 
 
 // GROUP ROUTE CASEOWNER
@@ -59,9 +56,10 @@ Route::prefix('talent')->name('talent.')->group(function() {
 
     Route::middleware(['auth', 'verified'])->group(function() {
         // dasboard
-        Route::get('/dashboard', [TalentDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [TalentDashboardController::class, 'dashboard'])->name('dashboard');
         // cases
         Route::get('/cases', [TalentCasesController::class, 'listAvailableCases'])->name('availableCases');
+        Route::get('/cases/search', [TalentCasesController::class, 'index'])->name('index');
         Route::post('/cases/{caseId}/proposal', [TalentCasesController::class, 'submitProposal'])->name('submitProposal');
         Route::get('/projects', [TalentCasesController::class, 'myProjects'])->name('myProjects');
     });
@@ -92,9 +90,11 @@ Route::middleware('auth')->group(function(){
     // email verification notice
     Route::get('/email/verify', [AuthController::class, 'VerifyNotice'])
     ->name('verification.notice');
+
     // email verification handler
     Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'VerifyEmail'])
     ->middleware(['signed'])->name('verification.verify');
+
     // resending email verification
     Route::post('/email/verification-notification', [AuthController::class, "VerifyHandler"])
     ->middleware(['throttle:6,1'])->name('verification.send');
@@ -115,12 +115,13 @@ Route::middleware('guest')->group(function(){
 });
 
 // sign in using google account
-Route::get('auth/google', [AuthController::class, 'RedirectToGoogle'])->name('google.login');
-Route::get('auth/google-callback', [AuthController::class, 'HandleGoogleCallback']);
+Route::get('auth/google/{role}', [AuthController::class, 'RedirectToGoogle'])->name('google.login');
+Route::get('auth/google-callback/', [AuthController::class, 'HandleGoogleCallback']);
 
 // token top-up
 Route::middleware(['auth', 'verified'])->group(function(){
     Route::get('/topup', [TopupController::class, 'showForm'])->name('token.topup.form');
     Route::post('/topup', [TopupController::class, 'checkout'])->name('token.topup.checkout');
     Route::get('/payment-success', [TopupController::class, 'success'])->name('token.topup.success');
+    // Route::get('/invoice/{id}', [TopupController::class, 'invoice']);
 });

@@ -2,32 +2,41 @@
     <!-- Logo -->
     <div class="flex items-center space-x-4">
         <img src="{{ asset('image/LogoLiturtara1.png') }}" alt="Liturtara Logo" class="h-8">
+        {{-- <img src="{{ asset('storage/liturtaralogo.svg') }}" alt="Liturtara Logo" class="h-8"> --}}
     </div>
 
     <!-- Menu Navigasi (Left Side) -->
     <div class="hidden md:flex flex-row  md:space-x-4 flex-grow ml-6 text-sm">
-        <a href="#" class="font-medium text-navy hover:text-blue-900 py-2 px-4">Home</a>
-        <a href="#" class="font-medium text-navy hover:text-blue-900 py-2 px-4">About Us</a>
-        <a href="#" class="font-medium text-navy hover:text-blue-900 py-2 px-4">Service</a>
-        <a href="#" class="font-medium text-navy hover:text-blue-900 py-2 px-4">News</a>
-        <a href="#" class="font-medium text-navy hover:text-blue-900 py-2 px-4">Our Contact</a>
+        @if (session("role") == "case owner")
+        <a href="{{ route("caseowner.dashboard") }}" class="font-medium text-navy hover:text-blue-700 py-2 px-4">Home</a>
+        @elseif (session("role") == "talent")
+        <a href="{{ route("talent.dashboard") }}" class="font-medium text-navy hover:text-blue-700 py-2 px-4">Home</a>
+        @endif
+        <a href="#" class="font-medium text-navy hover:text-blue-700 py-2 px-4">About Us</a>
+        <a href="#" class="font-medium text-navy hover:text-blue-700 py-2 px-4">Service</a>
+        <a href="#" class="font-medium text-navy hover:text-blue-700 py-2 px-4">News</a>
+        <a href="#" class="font-medium text-navy hover:text-blue-700 py-2 px-4">Our Contact</a>
     </div>
 
     <!-- Account Button (Right Side) -->
     <div class="flex justify-center items-center space-x-4">
         <!-- Token Button -->
-        <a href="#">
+        @if (session("role") == "case owner")
+        <a href="{{ route("token.topup.form") }}">
             <button class="text-sm text-gray-700 hover:text-navy font-medium">
-                {{ $token->amount ?? 0 }} Token
+                {{ session("token")}} Token
             </button>
         </a>
-
-
+        @elseif (session("role") == "talent")
+        <button class="text-sm text-gray-700 hover:text-navy font-medium">
+            {{ session("token")}} Token
+        </button>
+        @endif
 
         <!-- Point Button -->
-        <a href="#">
+        <a href="#" class="flex">
             <button class="text-sm text-gray-700 hover:text-navy font-medium">
-                {{ $userPoint->points ?? 0 }} Point
+                {{ session("point")}} Point
             </button>
         </a>
 
@@ -39,7 +48,7 @@
 
             <!-- Notification Box -->
             <div id="notificationBox"
-                class="hidden absolute right-80 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-50">
+                class="hidden absolute right-64 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-50">
                 <div class="px-6 pt-5 pb-2 border-b border-gray-200">
                     <h4 class="font-bold text-blue-900 text-lg">Notification</h4>
                 </div>
@@ -104,7 +113,7 @@
         <form action="{{ route('logout') }}" method="post">
             @csrf
             <button type="submit"
-                class="text-sm font-medium px-4 py-2 bg-navy text-white rounded-md border-2 border-navy hover:bg-blue-900  hover:border-2 hover:border-blue-900">
+                class="text-sm font-medium px-4 py-2 bg-navy text-white rounded-md border-2 border-navy hover:bg-blue-900 hover:text-white hover:border-2 hover:border-blue-900">
                 Logout
             </button>
         </form>
