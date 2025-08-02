@@ -15,6 +15,10 @@ class ReviewController extends Controller
     {
         $user = Auth::user();
 
+        if ($user->role != 'case owner') {
+            abort(403);
+        }
+
         // Validasi: hanya case owner & belum review
         if ($case->user_id !== $user->id || $case->review) {
             return redirect()->route('caseowner.dashboard')->with('error', 'Tidak dapat me-review case ini.');

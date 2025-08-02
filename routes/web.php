@@ -57,6 +57,9 @@ Route::prefix('talent')->name('talent.')->group(function() {
     Route::middleware(['auth', 'verified'])->group(function() {
         // dasboard
         Route::get('/dashboard', [TalentDashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/dashboard/case-list', [TalentDashboardController::class, 'dashboard'])->name('dashboard.case-list');
+        Route::get('/dashboard/explore-case', [TalentDashboardController::class, 'dashboard'])->name('dashboard.explore-case');
+        Route::get('/dashboard/solution-status', [TalentDashboardController::class, 'dashboard'])->name('dashboard.solution-status');
         // cases
         Route::get('/cases', [TalentCasesController::class, 'listAvailableCases'])->name('availableCases');
         Route::get('/cases/search', [TalentCasesController::class, 'index'])->name('index');

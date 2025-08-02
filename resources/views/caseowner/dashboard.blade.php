@@ -1,7 +1,7 @@
 @extends('layout.default')
 @section('title', 'Dashboard Case Owner')
 @section('content')
-    @include("layout.navbar_after")
+    @include('layout.navbar_after')
 
     {{-- alert --}}
     @include('layout.alert')
@@ -66,7 +66,7 @@
             <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-6">
                 <!-- Sidebar filter -->
                 <div class="md:col-span-1 shadow-md h-fit rounded-lg">
-                    @foreach (['Sent', 'Available', 'In-progress', 'Completed', 'Expired'] as $status)
+                    @foreach (['Sent', 'Available', 'In-progress', 'Completed', 'Cancelled', 'Expired'] as $status)
                         <div>
                             <a href="{{ request()->fullUrlWithQuery(['status' => $status]) }}"
                                 class="block px-4 py-2 rounded {{ request('status') === $status ? 'bg-navy text-white font-semibold' : 'hover:bg-gray-100' }}">
@@ -81,7 +81,7 @@
 
                 <!-- Case list -->
                 <div class="md:col-span-3 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-6 mx-auto">
-                    @foreach ($cases as $case)
+                    @forelse ($cases as $case)
                         @php
                             $statusColor = match ($case->status) {
                                 'Available' => 'bg-navy',
@@ -184,7 +184,17 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        @if ($search)
+                            <p
+                                class="md:col-span-3 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-6 mx-auto items-center text-xl text-gray-400">
+                                Case not found</p>
+                        @else
+                            <p
+                                class="md:col-span-3 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-6 mx-auto items-center text-xl text-gray-400">
+                                There's no uploaded cases</p>
+                        @endif
+                    @endforelse
                 </div>
             </div>
             <div class="m-4">

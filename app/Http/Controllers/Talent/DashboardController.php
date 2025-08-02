@@ -16,6 +16,11 @@ class DashboardController extends Controller
     public function dashboard(Request $request)
     {
         $user = Auth::user();
+
+        if ($user->role != 'talent') {
+            abort(403);
+        }
+
         $tab = $request->get('tab', 'case-list');
         $status = $request->input('status');
         $search = $request->input('search');
@@ -61,5 +66,4 @@ class DashboardController extends Controller
 
         return view('talent.dashboard', compact('cases', 'user', 'tab_view', 'status', 'search'));
     }
-
 }

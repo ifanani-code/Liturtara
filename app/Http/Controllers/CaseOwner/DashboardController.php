@@ -17,10 +17,14 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
+        if ($user->role != 'case owner') {
+            abort(403);
+        }
+
         // Ambil query input
         $search = $request->input('search');
         $status = $request->input('status');
-        $allowedStatus = ['Sent', 'Available', 'In-progress', 'Completed', 'Expired'];
+        $allowedStatus = ['Sent', 'Available', 'In-progress', 'Completed', 'Cancelled', 'Expired'];
 
         // Ambil case milik user saja
         $query = Cases::with('user.profile')->where('user_id', $user->id);

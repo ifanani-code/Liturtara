@@ -1,4 +1,4 @@
-@foreach ($cases as $case)
+@forelse ($cases as $case)
     @php
         $statusColor = match ($case->status) {
             'Available' => 'bg-navy',
@@ -79,4 +79,14 @@
             </div>
         </div>
     </div>
-@endforeach
+@empty
+    @if ($search)
+        <p
+            class="md:col-span-3 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-6 mx-auto items-center text-xl text-gray-400">
+            Case not found</p>
+    @else
+        <p
+            class="md:col-span-3 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 gap-6 mx-auto items-center text-xl text-gray-400">
+            There's no uploaded cases</p>
+    @endif
+@endforelse
