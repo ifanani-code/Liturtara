@@ -1,15 +1,17 @@
-<footer class="bg-navy text-white py-28">
-    <div class="container mx-auto px-6 space-y-8">
+<footer class="bg-navy text-white py-24">
+    <div class="container mx-auto px-6">
         <div class="flex flex-col md:flex-row justify-between gap-8">
-            <div class="space-y-4 ">
-                <img src="{{ asset('image/LogoLiturtara2.png') }}" alt="Liturtara Logo" class="h-10">
-                <address class="not-italic text-sm">
+            <div class="">
+                <img src="{{ asset('image/logo-2.svg') }}" alt="Liturtara Logo" class="mb-5 h-16">
+                {{-- <h2 class="text-lg text-white font-medium">PT. Literasi Jaya Nusantara</h2> --}}
+                <address class="w-7/12 not-italic text-sm my-5">
                     Jl. Geger Kalong Hilir, Sukasari, Kec. Sukasari, Kota Bandung, Jawa Barat 40152
                 </address>
-                <div class="flex space-x-4 mt-2">
-                    <a href="#"><img src="{{ asset('image/facebook.svg') }}" alt="Facebook" class="h-10"></a>
-                    <a href="#"><img src="{{ asset('image/instagram.svg') }}" alt="Instagram" class="h-10"></a>
-                    <a href="#"><img src="{{ asset('image/linkin.svg') }}" alt="LinkedIn" class="h-10"></a>
+                <div class="flex space-x-4 mt-20">
+                    <a href="https://www.facebook.com/profile.php?id=61572316547988" target="_blank"><img src="{{ asset('image/facebook.svg') }}" alt="Facebook" class="h-10"></a>
+                    <a href="https://www.instagram.com/liturtara?igsh=eDB0eWN5ZXI1aXhv" target="_blank"><img src="{{ asset('image/instagram.svg') }}" alt="Instagram" class="h-10"></a>
+                    <a href="https://x.com/liturtara?s=21&t=nTYFx9RuLQGpAdNRaa5rxA" target="_blank"><img src="{{ asset('image/twitter.svg') }}" alt="X" class="h-10"></a>
+                    <a href="https://www.linkedin.com/company/liturtara/" target="_blank"><img src="{{ asset('image/linkin.svg') }}" alt="LinkedIn" class="h-10"></a>
                 </div>
             </div>
 
@@ -40,6 +42,6 @@
                 </div>
             </div>
         </div>
-        <p class="text-sm text-center">© 2024 Liturtara. All rights reserved.</p>
+        <p class="text-sm text-center mt-5">© 2024 Liturtara. All rights reserved.</p>
     </div>
 </footer>
