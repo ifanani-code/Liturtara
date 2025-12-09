@@ -27,18 +27,19 @@ class AuthController extends Controller
     public function VerifyEmail($id, $hash)
     {
         $user = User::findOrFail($id);
-        // if ($user->hasVerifiedEmail()) {
-        //     return redirect($this->redirectToDashboard($user));
-        // }
+        // dd($user);
+        $role = $user->role;
 
-        if ($user->markEmailAsVerified()) {
-            event(new Verified($user));
+        $cleanRole = str_replace(' ', '', $role);
+
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+            session()->flash('verified', 'Akun Anda telah berhasil diverifikasi. Silahkan Login');
+        } else {
+            session()->flash('info', 'Your email is already verified.');
         }
 
-        Auth::login($user);
-
-        return redirect('/')
-            ->with('verified', true);
+        return redirect( $cleanRole.'/login/'  );
     }
 
     // resending email verification
@@ -181,7 +182,6 @@ class AuthController extends Controller
                 'talent' => route('talent.dashboard'),
                 'reviewer' => route('reviewer.dashboard'),
             });
-
         } catch (Exception $e) {
             Log::error('Google Login Error', [
                 'message' => $e->getMessage(),
@@ -200,5 +200,17 @@ class AuthController extends Controller
     }
 
 
+    public function verifyFileForm($role)
+    {
+        $cleanRole = str_replace(' ', '', $role);
 
+        dd($cleanRole);
+        if($role == 'talent'){
+            return view('talent.auth.upload_file', compact('role'));
+        }else if($role == 'case owner'){
+            return view('caseowner.auth.upload_file', compact('role'));
+        }else if($role == 'reviewer'){
+            return view('reviewer.auth.upload_file', compact('role'));
+        }
+    }
 }
